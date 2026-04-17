@@ -23,11 +23,13 @@ def main():
         cmd = [sys.executable, "-m", "uvicorn", module, "--port", str(port), "--reload"]
         print(f"[{name}] Starting on port {port}...")
         
+        import os
         # Start process and don't block
         p = subprocess.Popen(
             cmd,
             stdout=sys.stdout,
-            stderr=sys.stderr
+            stderr=sys.stderr,
+            cwd=os.path.dirname(os.path.abspath(__file__))
         )
         processes.append((name, p))
         time.sleep(1) # Slight stagger to prevent log jumbling
