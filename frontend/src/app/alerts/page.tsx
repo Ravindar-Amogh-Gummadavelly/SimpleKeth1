@@ -70,6 +70,8 @@ export default function AlertsPage() {
     voice: false,
   });
 
+  const [simulation, setSimulation] = useState<{ type: string; active: boolean } | null>(null);
+
   const handleToggle = async (channelKey: "sms" | "push" | "voice", checked: boolean) => {
     setChannels((prev) => ({ ...prev, [channelKey]: checked }));
     
@@ -89,8 +91,42 @@ export default function AlertsPage() {
     }
   };
 
+  const simulateOfflineAlert = (type: "sms" | "voice") => {
+      setSimulation({ type, active: true });
+      setTimeout(() => setSimulation(null), 4000);
+  };
+
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "var(--color-cream-white)" }}>
+    <div className="min-h-screen relative" style={{ backgroundColor: "var(--color-cream-white)" }}>
+      {/* Simulation Overlay */}
+      {simulation?.active && (
+         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+             <motion.div 
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="bg-white rounded-2xl p-6 shadow-xl max-w-sm w-full text-center"
+             >
+                 {simulation.type === "sms" ? (
+                     <>
+                        <MessageSquare className="w-12 h-12 mx-auto mb-4" style={{ color: "var(--color-profit-green)" }} />
+                        <h3 className="text-lg font-bold mb-2">Offline SMS Received</h3>
+                        <p className="text-gray-600 bg-gray-100 p-3 rounded-lg text-sm text-left">
+                           "SimpleKeth Alert: SELL NOW! Onion prices at Azadpur hit ₹1400/q. Expecting drop by tomorrow."
+                        </p>
+                     </>
+                 ) : (
+                     <>
+                        <Phone className="w-12 h-12 mx-auto mb-4 animate-bounce" style={{ color: "var(--color-deep-farm-green)" }} />
+                        <h3 className="text-lg font-bold mb-2">Incoming Voice Call...</h3>
+                        <p className="text-gray-600 text-sm italic">
+                           "Hello! This is your SimpleKeth smart assistant. A profitable selling window is open today..."
+                        </p>
+                     </>
+                 )}
+             </motion.div>
+         </div>
+      )}
+
       <div className="container-main section">
         <h1 className="mb-2" style={{ color: "var(--color-deep-farm-green)", fontSize: "34px" }}>
           <Bell className="w-8 h-8 inline mr-2" />
@@ -101,33 +137,48 @@ export default function AlertsPage() {
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Channel Settings */}
-          <div className="card" style={{ height: "fit-content" }}>
-            <h3 className="text-lg mb-4" style={{ color: "var(--color-deep-farm-green)" }}>
-              Notification Channels
-            </h3>
-            {[
-              { key: "sms" as const, icon: MessageSquare, label: t("alerts.enableSms", locale) },
-              { key: "push" as const, icon: Smartphone, label: t("alerts.enablePush", locale) },
-              { key: "voice" as const, icon: Phone, label: t("alerts.enableVoice", locale) },
-            ].map((ch) => (
-              <label
-                key={ch.key}
-                className="flex items-center justify-between py-3 cursor-pointer border-b last:border-0"
-                style={{ borderColor: "var(--color-border)" }}
-              >
-                <div className="flex items-center gap-3">
-                  <ch.icon className="w-5 h-5" style={{ color: "var(--color-fresh-leaf-green)" }} />
-                  <span className="font-medium">{ch.label}</span>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={channels[ch.key]}
-                  onChange={(e) => handleToggle(ch.key, e.target.checked)}
-                  className="w-5 h-5 accent-[#4E7C4F] cursor-pointer"
-                />
-              </label>
-            ))}
+          {/* Channel Settings & Simulators */}
+          <div className="flex flex-col gap-6">
+              <div className="card" style={{ height: "fit-content" }}>
+                <h3 className="text-lg mb-4" style={{ color: "var(--color-deep-farm-green)" }}>
+                  Notification Channels
+                </h3>
+                {[
+                  { key: "sms" as const, icon: MessageSquare, label: t("alerts.enableSms", locale) },
+                  { key: "push" as const, icon: Smartphone, label: t("alerts.enablePush", locale) },
+                  { key: "voice" as const, icon: Phone, label: t("alerts.enableVoice", locale) },
+                ].map((ch) => (
+                  <label
+                    key={ch.key}
+                    className="flex items-center justify-between py-3 cursor-pointer border-b last:border-0"
+                    style={{ borderColor: "var(--color-border)" }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <ch.icon className="w-5 h-5" style={{ color: "var(--color-fresh-leaf-green)" }} />
+                      <span className="font-medium">{ch.label}</span>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={channels[ch.key]}
+                      onChange={(e) => handleToggle(ch.key, e.target.checked)}
+                      className="w-5 h-5 accent-[#4E7C4F] cursor-pointer"
+                    />
+                  </label>
+                ))}
+              </div>
+
+              {/* Simulators */}
+              <div className="card bg-gray-50 border-dashed border-2">
+                 <h3 className="text-sm font-bold mb-3 text-gray-500 uppercase tracking-wider">Test Offline Fallbacks</h3>
+                 <div className="flex flex-col gap-3">
+                    <button onClick={() => simulateOfflineAlert('sms')} className="btn-secondary w-full flex items-center justify-center gap-2" style={{ borderColor: 'var(--color-deep-farm-green)', color: 'var(--color-deep-farm-green)' }}>
+                        <MessageSquare className="w-4 h-4" /> Simulate SMS
+                    </button>
+                    <button onClick={() => simulateOfflineAlert('voice')} className="btn-secondary w-full flex items-center justify-center gap-2" style={{ borderColor: 'var(--color-deep-farm-green)', color: 'var(--color-deep-farm-green)' }}>
+                        <Phone className="w-4 h-4" /> Simulate Voice Call
+                    </button>
+                 </div>
+              </div>
           </div>
 
           {/* Alert Feed */}
