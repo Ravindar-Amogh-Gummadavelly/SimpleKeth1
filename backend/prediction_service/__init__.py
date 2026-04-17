@@ -1,0 +1,3 @@
+"""
+SimpleKeth — Prediction Service init
+"""

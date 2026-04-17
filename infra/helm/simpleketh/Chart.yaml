@@ -1,0 +1,6 @@
+apiVersion: v2
+name: simpleketh
+description: SimpleKeth — AI-Powered Crop Decision Assistant
+version: 1.0.0
+appVersion: "1.0.0"
+type: application

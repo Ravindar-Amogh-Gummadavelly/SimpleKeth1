@@ -1,0 +1,3 @@
+"""
+SimpleKeth — Recommendation Service init
+"""

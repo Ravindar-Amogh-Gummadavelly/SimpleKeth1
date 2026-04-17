@@ -1,0 +1,95 @@
+{
+  "app": {
+    "name": "SimpleKeth",
+    "tagline": "AI-Powered Crop Decision Assistant"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "market": "Market Comparison",
+    "trends": "Price Trends",
+    "simulator": "Simulator",
+    "alerts": "Alerts",
+    "profile": "Profile"
+  },
+  "hero": {
+    "headline": "Know Exactly When & Where to Sell Your Crops",
+    "subtext": "AI-powered insights to maximize your profit and avoid losses",
+    "cta": "Get Recommendation"
+  },
+  "decision": {
+    "sellNow": "SELL NOW",
+    "hold": "HOLD",
+    "expectedProfit": "Expected Net Profit",
+    "recommendedMandi": "Recommended Mandi",
+    "confidence": "Confidence",
+    "distance": "Distance",
+    "rationale": "Why this recommendation",
+    "viewAlternatives": "View alternatives"
+  },
+  "input": {
+    "selectCrop": "Select Crop",
+    "quantity": "Quantity (kg)",
+    "quantityPlaceholder": "Enter quantity in kg",
+    "location": "Your Location / Nearest Mandi",
+    "locationPlaceholder": "Search mandi...",
+    "getRecommendation": "Get Recommendation"
+  },
+  "market": {
+    "title": "Multi-Mandi Comparison",
+    "subtitle": "Top mandis ranked by expected net profit",
+    "mandiName": "Mandi",
+    "predictedPrice": "Predicted Price",
+    "netProfit": "Net Profit",
+    "distance": "Distance",
+    "rank": "Rank"
+  },
+  "trends": {
+    "title": "Price Prediction Trends",
+    "subtitle": "View price forecasts for 7, 14 or 30 days",
+    "days7": "7 Days",
+    "days14": "14 Days",
+    "days30": "30 Days",
+    "actual": "Actual Price",
+    "predicted": "Predicted Price"
+  },
+  "simulator": {
+    "title": "Scenario Simulator",
+    "subtitle": "Adjust parameters to see how they affect your net profit",
+    "transportCost": "Transport Cost (₹/kg)",
+    "storageCost": "Storage Cost (₹/kg/day)",
+    "lossPct": "Estimated Loss (%)",
+    "storageDays": "Storage Days",
+    "recalculate": "Recalculate",
+    "netProfit": "Net Profit"
+  },
+  "alerts": {
+    "title": "Alerts & Notifications",
+    "subtitle": "Manage your price alerts and notification preferences",
+    "enableSms": "SMS Alerts",
+    "enablePush": "Push Notifications",
+    "enableVoice": "Voice Calls",
+    "noAlerts": "No alerts yet"
+  },
+  "profile": {
+    "title": "Farmer Profile",
+    "subtitle": "Manage your profile and preferences",
+    "name": "Name",
+    "phone": "Phone Number",
+    "email": "Email",
+    "language": "Language",
+    "primaryCrop": "Primary Crop",
+    "location": "Location",
+    "save": "Save Profile"
+  },
+  "offline": {
+    "banner": "You are offline. Showing last cached data.",
+    "lastUpdated": "Last updated"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try Again",
+    "perQuintal": "/quintal",
+    "km": "km"
+  }
+}

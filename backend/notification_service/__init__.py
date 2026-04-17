@@ -1,0 +1,3 @@
+"""
+SimpleKeth — Notification Service init
+"""

@@ -1,0 +1,130 @@
+version: '3.8'
+
+services:
+  # ─── PostgreSQL + TimescaleDB ─────────────────────
+  postgres:
+    image: timescale/timescaledb:latest-pg16
+    container_name: simpleketh-db
+    environment:
+      POSTGRES_USER: simpleketh
+      POSTGRES_PASSWORD: simpleketh_pass
+      POSTGRES_DB: simpleketh
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U simpleketh"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ─── Redis ────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: simpleketh-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ─── Prediction Service ───────────────────────────
+  prediction:
+    build:
+      context: ./backend
+      dockerfile: prediction_service/Dockerfile
+    container_name: simpleketh-prediction
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://simpleketh:simpleketh_pass@postgres:5432/simpleketh
+      - REDIS_URL=redis://redis:6379/0
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY:-your_weather_api_key_here}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ─── Recommendation Service ───────────────────────
+  recommendation:
+    build:
+      context: ./backend
+      dockerfile: recommendation_service/Dockerfile
+    container_name: simpleketh-recommendation
+    ports:
+      - "8002:8002"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://simpleketh:simpleketh_pass@postgres:5432/simpleketh
+      - PREDICTION_SERVICE_URL=http://prediction:8001
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ─── Notification Service ─────────────────────────
+  notification:
+    build:
+      context: ./backend
+      dockerfile: notification_service/Dockerfile
+    container_name: simpleketh-notification
+    ports:
+      - "8003:8003"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://simpleketh:simpleketh_pass@postgres:5432/simpleketh
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID:-mock_sid}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN:-mock_token}
+      - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER:-+1234567890}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ─── Profile Service ──────────────────────────────
+  profile:
+    build:
+      context: ./backend
+      dockerfile: profile_service/Dockerfile
+    container_name: simpleketh-profile
+    ports:
+      - "8004:8004"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://simpleketh:simpleketh_pass@postgres:5432/simpleketh
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ─── Frontend ─────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: simpleketh-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
+    depends_on:
+      - prediction
+      - recommendation
+      - notification
+      - profile
+
+  # ─── Nginx Reverse Proxy ──────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: simpleketh-nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./infra/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - prediction
+      - recommendation
+      - notification
+      - profile
+
+volumes:
+  pgdata:

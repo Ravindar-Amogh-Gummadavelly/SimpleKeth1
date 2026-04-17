@@ -1,0 +1,81 @@
+# Default values for SimpleKeth Helm chart
+
+replicaCount: 1
+
+frontend:
+  image:
+    repository: simpleketh-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 3000
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+
+predictionService:
+  image:
+    repository: simpleketh-prediction
+    tag: latest
+  service:
+    port: 8001
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+recommendationService:
+  image:
+    repository: simpleketh-recommendation
+    tag: latest
+  service:
+    port: 8002
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+notificationService:
+  image:
+    repository: simpleketh-notification
+    tag: latest
+  service:
+    port: 8003
+
+profileService:
+  image:
+    repository: simpleketh-profile
+    tag: latest
+  service:
+    port: 8004
+
+postgresql:
+  enabled: true
+  auth:
+    username: simpleketh
+    password: simpleketh_pass
+    database: simpleketh
+
+redis:
+  enabled: true
+  architecture: standalone
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: simpleketh.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+env:
+  DATABASE_URL: "postgresql+asyncpg://simpleketh:simpleketh_pass@simpleketh-postgresql:5432/simpleketh"
+  REDIS_URL: "redis://simpleketh-redis-master:6379/0"
+  API_BEARER_TOKEN: "sk-simpleketh-dev-token-2026"
+  OPENWEATHER_API_KEY: "your_weather_api_key_here"

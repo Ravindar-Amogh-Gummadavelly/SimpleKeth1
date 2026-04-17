@@ -1,0 +1,270 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════
+   SimpleKeth — Design Tokens & Global Styles
+   Following Design Document EXACTLY
+   ═══════════════════════════════════════════════════ */
+
+@theme {
+  /* ─── Primary Colors (Greens) ─── */
+  --color-deep-farm-green: #2F5D3A;
+  --color-fresh-leaf-green: #4E7C4F;
+  --color-soft-crop-green: #7DAA6A;
+  
+  /* ─── Soil & Earth Tones ─── */
+  --color-rich-soil-brown: #5A3E2B;
+  --color-clay-brown: #8B5E3C;
+  --color-light-sand: #D9C2A7;
+  
+  /* ─── Background Colors ─── */
+  --color-cream-white: #F7F4EF;
+  --color-soft-earth: #EFE6DA;
+  --color-light-green-tint: #E6F0E8;
+  
+  /* ─── Functional Colors (Decision UI) ─── */
+  --color-profit-green: #3FA34D;
+  --color-loss-red: #B23A3A;
+  --color-hold-warning: #C89B3C;
+  
+  /* ─── Neutral Colors ─── */
+  --color-primary-text: #2A2A2A;
+  --color-secondary-text: #6B6B6B;
+  --color-border: #DDD6CC;
+
+  /* ─── Font Families ─── */
+  --font-heading: 'Sora', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  /* ─── Font Sizes ─── */
+  --text-hero: 52px;
+  --text-section: 34px;
+  --text-card-title: 24px;
+  --text-body: 17px;
+  --text-small: 14px;
+
+  /* ─── Spacing ─── */
+  --spacing-section: 100px;
+  --spacing-section-sm: 60px;
+
+  /* ─── Border Radius ─── */
+  --radius-button: 10px;
+  --radius-card: 12px;
+  --radius-input: 8px;
+}
+
+/* ─── Base Styles ─── */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  color: var(--color-primary-text);
+  background-color: var(--color-cream-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-deep-farm-green);
+}
+
+h1 { font-size: var(--text-hero); }
+h2 { font-size: var(--text-section); }
+h3 { font-size: var(--text-card-title); }
+
+/* ─── Decision Text Style ─── */
+
+.decision-text {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ─── Profit Display ─── */
+
+.profit-display {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 36px;
+}
+
+/* ─── Card Base ─── */
+
+.card {
+  background: white;
+  border-radius: var(--radius-card);
+  padding: 20px 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--color-border);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* ─── Button Base ─── */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: var(--radius-button);
+  background-color: var(--color-fresh-leaf-green);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+  min-height: 48px;
+  min-width: 48px;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-deep-farm-green);
+  transform: scale(1.02);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* ─── Input Base ─── */
+
+.input-field {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-family: var(--font-body);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-input);
+  background: white;
+  color: var(--color-primary-text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  min-height: 48px;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--color-fresh-leaf-green);
+  box-shadow: 0 0 0 3px rgba(78, 124, 79, 0.15);
+}
+
+/* ─── Confidence Bar ─── */
+
+.confidence-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--color-soft-earth);
+  overflow: hidden;
+}
+
+.confidence-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+/* ─── Section Spacing ─── */
+
+.section {
+  padding-top: var(--spacing-section);
+  padding-bottom: var(--spacing-section);
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding-top: var(--spacing-section-sm);
+    padding-bottom: var(--spacing-section-sm);
+  }
+
+  h1 { font-size: 32px; }
+  h2 { font-size: 26px; }
+  h3 { font-size: 20px; }
+
+  .profit-display {
+    font-size: 28px;
+  }
+}
+
+/* ─── Container ─── */
+
+.container-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 640px) {
+  .container-main {
+    padding: 0 16px;
+  }
+}
+
+/* ─── Scrollbar ─── */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-cream-white);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-light-sand);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-clay-brown);
+}
+
+/* ─── Animations ─── */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s infinite;
+}
+
+/* ─── Offline Banner ─── */
+
+.offline-banner {
+  background: var(--color-hold-warning);
+  color: white;
+  text-align: center;
+  padding: 8px 16px;
+  font-size: var(--text-small);
+  font-weight: 600;
+}

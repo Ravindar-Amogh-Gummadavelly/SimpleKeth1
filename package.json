@@ -1,0 +1,15 @@
+{
+  "name": "simpleketh-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "npm run build --prefix frontend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "install:frontend": "npm install --prefix frontend",
+    "install:backend": "cd backend && pip install -r requirements.txt && pip install pytest httpx",
+    "test:backend": "cd backend && python -m pytest",
+    "test": "npm run build --prefix frontend && cd backend && python -m pytest",
+    "docker:up": "docker compose -f infra/docker-compose.yml up --build",
+    "docker:down": "docker compose -f infra/docker-compose.yml down"
+  }
+}

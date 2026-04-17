@@ -1,0 +1,201 @@
+📄 TECH STACK DOCUMENT — SimpleKeth
+📌 Version: Final (2026–2027 Best Practices)
+1. 🎨 FRONTEND ARCHITECTURE
+✅ Primary Stack
+Next.js (v15+)
+TypeScript (mandatory)
+🔹 Why This Stack
+✔ Performance (Critical Requirement)
+Server-Side Rendering (SSR) → fast first load
+Static Generation → faster on slow networks
+Streaming UI → load critical data first
+
+👉 Ensures <10 seconds response time
+
+✔ Scalability
+Handles current load (10,000 users/month) easily
+Ready for future scaling
+✔ Maintainability
+Component-based structure
+Type safety with TypeScript
+✔ Future-Proof
+Easy integration with mobile apps
+Works with modern AI workflows
+🔹 Best Practices (2026)
+Use App Router (not Pages Router)
+Prefer React Server Components
+Use Edge rendering for speed
+🔄 Alternatives
+Option	When to Use
+SvelteKit	Ultra-fast performance for low-end devices
+Qwik	Instant loading apps
+React (Vite)	Simpler projects
+2. 🎨 UI & STYLING SYSTEM
+✅ Primary Stack
+Tailwind CSS (v4)
+shadcn/ui (component library)
+🔹 Why
+✔ Fast Development
+Prebuilt UI components
+✔ Lightweight
+Small bundle size → ideal for rural networks
+✔ Accessibility
+Clean, readable UI for low-literacy users
+🔹 Enhancements
+Framer Motion → animations
+Icons (Lucide) → visual clarity
+🔄 Alternatives
+CSS Modules (strict control)
+Material UI (if design-heavy)
+3. ⚙️ BACKEND ARCHITECTURE
+✅ Primary Stack
+FastAPI
+🔹 Why
+✔ AI/ML Integration (Core Requirement)
+Direct integration with:
+XGBoost
+LSTM (TensorFlow/PyTorch)
+✔ High Performance
+Async APIs
+Low latency responses
+✔ API-First Design
+Works for:
+Web
+Mobile app
+SMS systems
+🔹 Architecture Pattern (2026)
+Microservices approach:
+Prediction Service
+Recommendation Service
+Notification Service
+🔄 Alternatives
+Option	When to Use
+Django	Structured large-scale systems
+Node.js (NestJS)	Full JS stack
+Serverless APIs	MVP stage only
+4. 🗄️ DATABASE ARCHITECTURE
+✅ Primary Stack
+PostgreSQL
+TimescaleDB (time-series extension)
+🔹 Why
+✔ Structured + Time-Series Data
+Farmer profiles
+Crop data
+Price history
+✔ ML-Friendly
+Efficient for forecasting models
+✔ Reliability
+ACID compliance
+High data integrity
+🔹 ORM Layer
+Prisma / Drizzle (modern ORM)
+🔹 Caching Layer
+Redis → fast access to predictions
+🔄 Alternatives
+Option	When to Use
+Supabase	Faster development (BaaS)
+MongoDB	Flexible schema
+Firebase	Realtime apps
+5. 📦 CORE LIBRARIES & PACKAGES
+🔹 Frontend
+TanStack Query → data fetching
+Zustand → state management
+React Hook Form + Zod → forms & validation
+Recharts / Chart.js → graphs
+🔹 Backend
+FastAPI
+Uvicorn (ASGI server)
+🔹 AI / ML
+XGBoost
+TensorFlow / PyTorch
+Prophet
+🔹 Data Processing
+Pandas
+NumPy
+🔹 Maps & Location
+Google Maps API
+👉 Used for:
+Route optimization
+Mandi heatmap
+🔹 Notifications
+Firebase → push notifications
+Twilio → SMS/voice
+6. ⚡ PERFORMANCE OPTIMIZATION
+✅ Required Strategies
+✔ Edge Rendering
+Faster response for distributed users
+✔ Caching
+Redis for predictions
+Precomputed outputs
+✔ Lazy Loading
+Load heavy components (maps, charts) only when needed
+✔ Streaming UI
+Show results progressively
+✔ Compression
+Use gzip/brotli
+🎯 Goal:
+Response time: <10 seconds (target: <3 seconds ideal)
+7. 📡 OFFLINE-FIRST ARCHITECTURE
+✅ Implementation
+PWA (Progressive Web App)
+Service Workers
+IndexedDB / Local Storage
+🔹 Functionality Offline
+Cached predictions
+Last known recommendations
+Basic navigation
+🎯 Why Important
+Works in rural low-connectivity areas
+Improves adoption
+8. 📱 MOBILE APP STRATEGY
+✅ Phase 1
+Build PWA (installable web app)
+✅ Phase 2
+Build native app using:
+React Native
+🔹 Why
+Reuse backend APIs
+Faster development
+9. 🛠️ DEVELOPMENT TOOLS & WORKFLOW
+🔹 Tools
+GitHub → version control
+Postman → API testing
+Figma → UI design
+🔹 Code Quality
+TypeScript
+ESLint + Prettier
+🔹 Testing
+Vitest → unit testing
+Playwright → end-to-end testing
+🔹 Workflow
+Design → Backend APIs → ML Models → Frontend Integration → Testing → Optimization
+10. 🧠 SYSTEM ARCHITECTURE OVERVIEW
+Frontend: Next.js (App Router + Server Components)
+        ↓
+Backend: FastAPI (Microservices)
+        ↓
+ML Layer: XGBoost / LSTM Models
+        ↓
+Database: PostgreSQL + TimescaleDB
+        ↓
+Cache: Redis
+        ↓
+External APIs: Price Data + Weather + Maps
+        ↓
+Notifications: Firebase + Twilio
+🏁 FINAL VERDICT
+✅ This Stack is:
+Fast → optimized for rural networks
+AI-Ready → seamless ML integration
+Scalable → handles growth
+Cost-Effective → efficient resource usage
+Future-Proof → supports mobile + offline
+🔥 STRATEGIC NOTE
+
+👉 Your real strength is NOT tech stack — it’s decision intelligence
+
+This stack ensures:
+
+Fast predictions
+Reliable recommendations
+Simple farmer experience

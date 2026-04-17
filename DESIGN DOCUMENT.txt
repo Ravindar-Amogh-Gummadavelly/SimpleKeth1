@@ -1,0 +1,346 @@
+DESIGN DOCUMENT (FINAL)
+
+---
+
+# 1) 🎯 VISUAL STYLE
+
+### Design Direction
+
+* Modern + clean + nature-inspired
+* Warm, grounded, and trustworthy
+* Functional-first (clarity over decoration)
+
+---
+
+### Mood & Feel
+
+* Calm and reassuring
+* Farmer-friendly (not tech-heavy)
+* Confident decision-making
+
+---
+
+### Core Principle
+
+👉 *“Show the decision clearly, not the complexity behind it.”*
+
+---
+
+# 2) 🎨 COLOUR PALETTE
+
+Inspired by *soil, crops, and natural farming environment*
+
+---
+
+## 🌱 Primary Colors (Greens)
+
+* Deep Farm Green → #2F5D3A (primary actions, headings)
+* Fresh Leaf Green → #4E7C4F (buttons, highlights)
+* Soft Crop Green → #7DAA6A (secondary UI)
+
+---
+
+## 🌾 Soil & Earth Tones
+
+* Rich Soil Brown → #5A3E2B
+* Clay Brown → #8B5E3C
+* Light Sand → #D9C2A7
+
+👉 Used for warmth, accents, backgrounds
+
+---
+
+## 🌤 Background Colors
+
+* Cream White → #F7F4EF (main background)
+* Soft Earth → #EFE6DA (section background)
+* Light Green Tint → #E6F0E8 (highlight sections)
+
+---
+
+## 💰 Functional Colors (Decision UI)
+
+* Profit Green → #3FA34D
+* Loss / Urgency → #B23A3A
+* Hold / Warning → #C89B3C
+
+---
+
+## ⚫ Neutral Colors
+
+* Primary Text → #2A2A2A
+* Secondary Text → #6B6B6B
+* Borders → #DDD6CC
+
+---
+
+# 3) 🔤 TYPOGRAPHY
+
+### Font Family
+
+* Headings → *Sora*
+* Body → *DM Sans*
+
+---
+
+### Font Scale
+
+* H1 → 52px (Hero)
+* H2 → 34px (Section titles)
+* H3 → 24px (Card titles)
+* Body → 17px
+* Small → 14px
+
+---
+
+### Typography Rules
+
+* Use *bold + large text* for decisions
+* Keep text minimal and readable
+* Use spacing for clarity (line-height: 1.5–1.7)
+
+---
+
+### Special Styling
+
+#### Decision Text
+
+* ALL CAPS
+* Bold
+* Slight letter spacing
+
+Example:
+👉 *SELL NOW*
+
+---
+
+#### Profit Display
+
+* Large + bold
+* Highlight color (green)
+
+Example:
+👉 *₹12,450*
+
+---
+
+# 4) 📐 LAYOUT STYLE
+
+---
+
+## Structure
+
+* Fullscreen vertical sections
+* Smooth scroll experience
+
+---
+
+## Grid System
+
+* 12-column layout
+* Max width: 1200px
+* Centered content
+
+---
+
+## Spacing
+
+* Section padding: 80–120px
+* Clean separation between sections
+
+---
+
+## Responsiveness
+
+* Mobile-first design
+* Stack layout vertically on small screens
+* Large touch-friendly elements
+
+---
+
+# 5) 🧩 COMPONENTS
+
+---
+
+## 🔘 Buttons
+
+* Rounded (10–12px radius)
+* Green background + white text
+* Hover: darker + slight scale
+
+---
+
+## 🧾 Cards
+
+* White / cream background
+* Soft shadow
+* Rounded corners (12px)
+* Padding: 20–24px
+
+---
+
+## 📊 Decision Card (CORE COMPONENT)
+
+Displays:
+
+* Recommendation → *SELL NOW / HOLD*
+* Expected Profit → ₹ value (large)
+* Best Mandi → location
+
+👉 This is the *most important UI element*
+
+---
+
+## 📍 Input Fields
+
+* Dropdown (crop selection)
+* Number input (quantity)
+* Location input
+
+Style:
+
+* Clean borders
+* Large clickable areas
+
+---
+
+## 🔔 Alerts
+
+* Small banners/cards
+* Color-coded:
+
+  * Green → opportunity
+  * Red → urgency
+  * Yellow → caution
+
+---
+
+## 📈 Graphs
+
+* Simple line charts
+* Minimal, clean, readable
+
+---
+
+# 6) 🚀 HERO SECTION
+
+---
+
+## Layout
+
+*Left Side:*
+
+* Headline
+* Subtext
+* Input form
+* CTA button
+
+*Right Side:*
+
+* Subtle animated visual (farm/fields/graphs)
+
+---
+
+## Content
+
+### Headline
+
+👉 *“Know Exactly When & Where to Sell Your Crops”*
+
+---
+
+### Subtext
+
+👉 AI-powered insights to maximize your profit and avoid losses
+
+---
+
+## Input Module
+
+* Crop selector
+* Quantity input
+* Location input
+
+---
+
+## CTA Button
+
+👉 *“Get Recommendation”*
+
+---
+
+## Animation Guidelines
+
+* Soft, natural motion (fields, crops, graphs)
+* Looping animation
+* Lightweight (avoid heavy frames everywhere)
+
+---
+
+# 7) 🎯 DESIGN REFERENCES
+
+---
+
+## Inspiration Type
+
+* Clean SaaS dashboards
+* Agriculture-based UI
+* Minimal landing pages
+
+---
+
+## Search Keywords
+
+* “Agri tech dashboard UI”
+* “Farm management app UI”
+* “Minimal SaaS landing page”
+* “Clean card UI dashboard”
+
+---
+
+## Conceptual Style References
+
+* Clean fintech dashboards (for clarity)
+* Material design systems (for usability)
+* Minimal modern web apps
+
+---
+
+# 🔥 FINAL DESIGN PRINCIPLES
+
+---
+
+### 1. Decision First
+
+👉 Always highlight:
+
+* SELL NOW / HOLD
+* Profit
+* Best location
+
+---
+
+### 2. Simplicity Over Features
+
+👉 Don’t overload UI with data
+
+---
+
+### 3. Visual Clarity
+
+👉 Big text + clear colors + simple layout
+
+---
+
+### 4. Farmer-Friendly UX
+
+👉 Easy to read
+👉 Easy to click
+👉 Easy to understand
+
+---
+
+### 5. Controlled Animation
+
+👉 Use animation only to enhance—not distract
+

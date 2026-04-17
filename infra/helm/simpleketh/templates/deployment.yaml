@@ -1,0 +1,93 @@
+{{- range $service := list "prediction" "recommendation" "notification" "profile" }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $.Release.Name }}-{{ $service }}
+  labels:
+    app: {{ $service }}
+    chart: {{ $.Chart.Name }}
+spec:
+  replicas: {{ $.Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ $service }}
+  template:
+    metadata:
+      labels:
+        app: {{ $service }}
+    spec:
+      containers:
+        - name: {{ $service }}
+          image: "simpleketh-{{ $service }}:latest"
+          ports:
+            - containerPort: {{ if eq $service "prediction" }}8001{{ else if eq $service "recommendation" }}8002{{ else if eq $service "notification" }}8003{{ else }}8004{{ end }}
+          envFrom:
+            - configMapRef:
+                name: {{ $.Release.Name }}-env
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $.Release.Name }}-{{ $service }}
+spec:
+  selector:
+    app: {{ $service }}
+  ports:
+    - port: {{ if eq $service "prediction" }}8001{{ else if eq $service "recommendation" }}8002{{ else if eq $service "notification" }}8003{{ else }}8004{{ end }}
+      targetPort: {{ if eq $service "prediction" }}8001{{ else if eq $service "recommendation" }}8002{{ else if eq $service "notification" }}8003{{ else }}8004{{ end }}
+  type: ClusterIP
+{{- end }}
+---
+# Frontend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-frontend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+          ports:
+            - containerPort: 3000
+          resources:
+            {{- toYaml .Values.frontend.resources | nindent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-frontend
+spec:
+  selector:
+    app: frontend
+  ports:
+    - port: 3000
+      targetPort: 3000
+  type: ClusterIP
+---
+# ConfigMap for environment variables
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-env
+data:
+  DATABASE_URL: {{ .Values.env.DATABASE_URL | quote }}
+  REDIS_URL: {{ .Values.env.REDIS_URL | quote }}
+  API_BEARER_TOKEN: {{ .Values.env.API_BEARER_TOKEN | quote }}
+  OPENWEATHER_API_KEY: {{ .Values.env.OPENWEATHER_API_KEY | quote }}

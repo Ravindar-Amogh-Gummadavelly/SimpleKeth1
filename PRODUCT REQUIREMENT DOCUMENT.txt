@@ -1,0 +1,211 @@
+📄 PRODUCT REQUIREMENT DOCUMENT (PRD)
+🌾 Product: SimpleKeth
+📌 Version: 1.0 (Final)
+1. 🧠 PROJECT OVERVIEW
+🔹 Problem Statement
+
+Farmers face price volatility, lack of market intelligence, and dependency on middlemen, leading to:
+
+Distress selling
+Lower profits
+Uninformed decisions
+🔹 Solution Overview
+
+SimpleKeth is an AI-powered platform that:
+
+Predicts crop prices
+Recommends when and where to sell
+Maximizes net profit (not just price)
+
+It works even in low-connectivity rural environments via:
+
+SMS alerts
+Voice support
+Offline mode
+🎯 Goals
+Primary Goals:
+Increase farmer income by 15–30%
+Enable data-driven selling decisions
+Reduce distress selling
+Secondary Goals:
+Reduce middlemen dependency
+Improve accessibility (low literacy users)
+Build scalable agri-intelligence platform
+2. 👥 TARGET AUDIENCE
+🎯 Primary Users:
+Small & medium farmers (India)
+Low/medium digital literacy
+Limited internet access
+👥 Secondary Users:
+Farmer Producer Organizations (FPOs)
+Cooperatives & NGOs
+Government bodies
+3. 📱 PRODUCT STRUCTURE (PAGES)
+✅ Total Pages: 8
+Page	Purpose
+Home Dashboard	Instant decision (sell/hold + profit)
+Market Comparison	Compare mandis by profit
+Prediction & Trends	View price forecasts
+Scenario Simulator	“What if” decision analysis
+Alerts	Track notifications
+Map / Heatmap	Visual mandi prices
+Farmer Profile	User personalization
+Settings	Language, voice, SMS
+4. ⚙️ CORE FEATURES
+🔴 TIER 1 — MUST HAVE (MVP)
+1. Price Prediction Engine
+7–30 day mandi-level forecasting
+2. Smart Sell Recommendation 🔥
+“Sell now” vs “Hold”
+Best selling time
+3. Net Profit Calculator
+Profit after:
+transport
+storage
+losses
+4. Multi-Mandi Comparison
+Top 3–5 mandis ranked by profit
+5. Farmer Profile System
+Crop, quantity, location
+6. Alerts System
+Price spikes
+Selling opportunities
+7. SMS / Voice Fallback
+Works without internet
+🟠 TIER 2 — SHOULD HAVE
+Scenario Simulation
+Explainable AI
+Confidence/Risk Indicator
+Multilingual Support
+Voice Interaction
+Offline Mode
+Storage Advisory
+🟡 TIER 3 — NICE TO HAVE
+Transport Optimization
+Mandi Heatmap
+Demand/Supply Indicators
+Smart Notifications
+🟢 FUTURE FEATURES
+Long-term forecasting
+Buyer marketplace integration
+5. 🔁 USER JOURNEY
+🧭 Flow:
+User opens app
+Inputs:
+Crop
+Quantity
+Location
+Dashboard shows:
+Price trend
+Recommendation
+Profit
+User explores:
+Market comparison
+Scenario simulation
+User checks:
+Risk
+Explanation
+User decides:
+Sell now OR wait
+Receives alerts
+🎯 Key Actions:
+Enter crop details
+View recommendation
+Compare options
+Make decision
+6. 🧩 SYSTEM ARCHITECTURE
+🔹 Frontend
+Mobile-first (Flutter / React Native)
+Simple UI (icons + voice)
+🔹 Backend
+FastAPI / Node.js
+REST APIs
+🔹 AI/ML Layer
+Models:
+XGBoost
+LSTM
+Ensemble approach
+🔹 Database
+PostgreSQL + Time-series DB
+🔹 Data Sources
+Agmarknet (mandi prices)
+Weather APIs
+Supply/demand signals
+🔹 Infrastructure
+Cloud (AWS/GCP)
+Docker deployment
+Scheduled retraining
+7. 📊 SUCCESS METRICS (KPIs)
+🎯 Impact Metrics
+Farmer income increase (+15–30%)
+Decision accuracy (>75%)
+Profit gain per transaction
+🤖 AI Metrics
+Forecast accuracy (<10–15% error)
+Directional accuracy (>80%)
+📱 User Metrics
+Daily active users
+Retention rate
+Feature usage
+⚙️ System Metrics
+Response time (<3 sec)
+Uptime (>99%)
+🌍 Growth Metrics
+Number of farmers
+Regional coverage
+SMS engagement
+8. 📊 COMPETITIVE ANALYSIS
+🥇 Competitor 1: Agmarknet
+Strengths:
+Large mandi dataset
+Reliable real-time prices
+Weakness:
+No prediction
+No decision-making
+🥈 Competitor 2: e-NAM
+Strengths:
+Direct marketplace
+Price discovery
+Weakness:
+No guidance on when to sell
+🥉 Competitor 3: CropIn
+Strengths:
+Advanced analytics
+Strong AI
+Weakness:
+Not farmer-friendly
+No selling recommendations
+🚀 Differentiation
+
+SimpleKeth provides:
+
+Decision intelligence
+Profit optimization
+Personalized insights
+Offline accessibility
+9. ⚠️ RISKS & MITIGATIONS
+Risk	Mitigation
+Data gaps	Use fallback + interpolation
+Low adoption	Voice + SMS support
+Prediction errors	Confidence scores
+Connectivity issues	Offline mode
+10. 🚀 ROADMAP
+Phase 1 (MVP)
+Data ingestion
+Prediction engine
+Recommendation system
+Basic UI
+Phase 2
+Simulation
+Explainability
+Alerts
+Phase 3
+Optimization
+Map features
+Scaling
+Phase 4
+Marketplace integration
+Expansion
+🔥 FINAL PRODUCT VISION
+
+SimpleKeth is an AI-powered decision assistant that tells farmers exactly when, where, and how to sell their crops for maximum profit — even without internet.

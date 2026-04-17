@@ -1,0 +1,223 @@
+// SimpleKeth — Prisma Schema
+// Database: PostgreSQL + TimescaleDB
+// All models for Phase-1 MVP
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ──────────────────────────────────────────
+
+enum DecisionType {
+  SELL_NOW
+  HOLD
+}
+
+enum NotificationChannel {
+  SMS
+  PUSH
+  VOICE
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+enum CropCategory {
+  VEGETABLE
+  FRUIT
+  GRAIN
+  PULSE
+  SPICE
+  OILSEED
+  OTHER
+}
+
+// ─── Farmer ─────────────────────────────────────────
+
+model Farmer {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String   @unique
+  email     String?
+  language  String   @default("en") // en | hi | te
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  profile         FarmerProfile?
+  recommendations Recommendation[]
+  notifications   Notification[]
+
+  @@map("farmers")
+}
+
+model FarmerProfile {
+  id                   String  @id @default(uuid())
+  farmerId             String  @unique @map("farmer_id")
+  locationLat          Float?  @map("location_lat")
+  locationLng          Float?  @map("location_lng")
+  locationName         String? @map("location_name")
+  primaryCrop          String? @map("primary_crop")
+  secondaryCrops       String[] @map("secondary_crops")
+  avgQuantityKg        Float?  @map("avg_quantity_kg")
+  transportCostPerKg   Float   @default(1.5) @map("transport_cost_per_kg")
+  storageCostPerKgDay  Float   @default(0.5) @map("storage_cost_per_kg_day")
+  estimatedLossPct     Float   @default(5.0) @map("estimated_loss_pct")
+  preferredMandis      String[] @map("preferred_mandis")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  farmer Farmer @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+
+  @@map("farmer_profiles")
+}
+
+// ─── Mandi ──────────────────────────────────────────
+
+model Mandi {
+  id           String  @id @default(uuid())
+  code         String  @unique // e.g. "M001"
+  name         String
+  state        String
+  district     String
+  latitude     Float
+  longitude    Float
+  isActive     Boolean @default(true) @map("is_active")
+  commissionPct Float  @default(2.5) @map("commission_pct")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  prices          MandiPrice[]
+  predictions     Prediction[]
+  recommendations Recommendation[]
+  transportRates  TransportRate[]
+
+  @@map("mandis")
+}
+
+// ─── Mandi Prices (TimescaleDB hypertable candidate) ──
+
+model MandiPrice {
+  id             String   @id @default(uuid())
+  mandiId        String   @map("mandi_id")
+  commodity      String
+  variety        String?
+  minPrice       Float    @map("min_price")
+  maxPrice       Float    @map("max_price")
+  modalPrice     Float    @map("modal_price")
+  arrivalsTonnes Float?   @map("arrivals_tonnes")
+  priceDate      DateTime @map("price_date")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  mandi Mandi @relation(fields: [mandiId], references: [id], onDelete: Cascade)
+
+  @@unique([mandiId, commodity, priceDate])
+  @@index([mandiId, commodity, priceDate])
+  @@index([commodity, priceDate])
+  @@map("mandi_prices")
+}
+
+// ─── Predictions ────────────────────────────────────
+
+model Prediction {
+  id             String   @id @default(uuid())
+  mandiId        String   @map("mandi_id")
+  commodity      String
+  predictedPrice Float    @map("predicted_price")
+  confidence     Float
+  predictionDate DateTime @map("prediction_date")  // date being predicted
+  explanation    Json?    // [{ feature: string, impact: number }]
+  modelVersion   String   @map("model_version")
+  generatedAt    DateTime @map("generated_at")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  mandi Mandi @relation(fields: [mandiId], references: [id], onDelete: Cascade)
+
+  @@index([mandiId, commodity, predictionDate])
+  @@map("predictions")
+}
+
+// ─── Recommendations ────────────────────────────────
+
+model Recommendation {
+  id                String       @id @default(uuid())
+  farmerId          String?      @map("farmer_id")
+  mandiId           String       @map("mandi_id")
+  commodity         String
+  quantityKg        Float        @map("quantity_kg")
+  decision          DecisionType
+  expectedNetProfit Float        @map("expected_net_profit")
+  confidence        Float
+  rationaleText     String       @map("rationale_text")
+  alternativeMandis Json?        @map("alternative_mandis") // [{ id, expectedNetProfit }]
+  modelVersion      String       @map("model_version")
+  generatedAt       DateTime     @map("generated_at")
+  createdAt         DateTime     @default(now()) @map("created_at")
+
+  farmer Farmer? @relation(fields: [farmerId], references: [id])
+  mandi  Mandi   @relation(fields: [mandiId], references: [id])
+
+  @@index([farmerId, commodity, generatedAt])
+  @@map("recommendations")
+}
+
+// ─── Transport Rates ────────────────────────────────
+
+model TransportRate {
+  id              String  @id @default(uuid())
+  mandiId         String  @map("mandi_id")
+  fromLocationName String @map("from_location_name")
+  distanceKm      Float   @map("distance_km")
+  costPerKg       Float   @map("cost_per_kg")
+  estimatedTimeHrs Float? @map("estimated_time_hrs")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  mandi Mandi @relation(fields: [mandiId], references: [id], onDelete: Cascade)
+
+  @@unique([mandiId, fromLocationName])
+  @@map("transport_rates")
+}
+
+// ─── Notifications ──────────────────────────────────
+
+model Notification {
+  id        String              @id @default(uuid())
+  farmerId  String              @map("farmer_id")
+  channel   NotificationChannel
+  status    NotificationStatus  @default(PENDING)
+  message   String
+  payload   Json?
+  sentAt    DateTime?           @map("sent_at")
+  createdAt DateTime            @default(now()) @map("created_at")
+
+  farmer Farmer @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+
+  @@index([farmerId, createdAt])
+  @@map("notifications")
+}
+
+// ─── Model Versions ─────────────────────────────────
+
+model ModelVersion {
+  id            String   @id @default(uuid())
+  versionTag    String   @unique @map("version_tag") // e.g. "xgboost-v1.3"
+  modelType     String   @map("model_type") // xgboost | lstm | prophet | ensemble
+  metrics       Json?    // { mae, mape, directionalAccuracy }
+  artifactPath  String?  @map("artifact_path")
+  isActive      Boolean  @default(false) @map("is_active")
+  trainedAt     DateTime @map("trained_at")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("model_versions")
+}
