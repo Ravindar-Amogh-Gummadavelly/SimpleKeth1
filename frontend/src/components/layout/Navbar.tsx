@@ -18,6 +18,7 @@ import {
   X,
   Globe,
   Leaf,
+  Map,
 } from "lucide-react";
 import { useUIStore } from "@/lib/store";
 import { t, locales, type Locale } from "@/i18n/config";
@@ -28,6 +29,7 @@ const navItems = [
   { href: "/market-comparison", icon: BarChart3, labelKey: "nav.market" },
   { href: "/prediction-trends", icon: TrendingUp, labelKey: "nav.trends" },
   { href: "/simulator", icon: Calculator, labelKey: "nav.simulator" },
+  { href: "/heatmap", icon: Map, labelKey: "nav.heatmap" },
   { href: "/alerts", icon: Bell, labelKey: "nav.alerts" },
   { href: "/profile", icon: User, labelKey: "nav.profile" },
 ];

@@ -51,6 +51,39 @@ class PredictionEngine:
 
     def __init__(self):
         self.model_version = "ensemble-v1.0-mvp"
+        from shared.config import get_settings
+        self.settings = get_settings()
+
+        self.xgb_model = None
+        try:
+            from xgboost_model import XGBoostPredictor 
+            # Needs sys.path injection for ml
+            import sys
+            import os
+            ml_path = os.path.join(os.path.dirname(__file__), '../../ml/models')
+            if ml_path not in sys.path:
+                sys.path.append(ml_path)
+            from xgboost_model import XGBoostPredictor
+            self.xgb_model = XGBoostPredictor().load("ml/artifacts/xgboost_model.joblib")
+            print("✅ Successfully loaded real XGBoost model into Prediction Engine.")
+        except Exception as e:
+            print(f"⚠️ Could not load ML model artifacts, falling back to heuristic Engine: {e}")
+
+    async def fetch_weather_data(self, lat: float, lon: float) -> Optional[dict]:
+        """Fetch live weather data from OpenWeather. Gracefully degrades if unavailable."""
+        if not self.settings.openweather_api_key or self.settings.openweather_api_key == "your_weather_api_key_here":
+            return None
+            
+        import httpx
+        url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={self.settings.openweather_api_key}&units=metric"
+        try:
+            async with httpx.AsyncClient(timeout=2.0) as client:
+                res = await client.get(url)
+                if res.status_code == 200:
+                    return res.json()
+        except Exception as e:
+            print(f"Weather API Error: {e}")
+        return None
 
     async def predict(
         self,
@@ -84,7 +117,7 @@ class PredictionEngine:
         # Generate predictions
         predictions = []
         for m_id, m_info in mandis_to_predict.items():
-            prediction = self._generate_single_prediction(
+            prediction = await self._generate_single_prediction(
                 m_id, m_info, crop, base_price, pred_date, now
             )
             predictions.append(prediction)
@@ -98,7 +131,7 @@ class PredictionEngine:
             generated_at=now.isoformat() + "Z",
         )
 
-    def _generate_single_prediction(
+    async def _generate_single_prediction(
         self,
         mandi_id: str,
         mandi_info: dict,
@@ -125,17 +158,52 @@ class PredictionEngine:
         noise = random.gauss(0, 0.03 * math.sqrt(days_ahead))
 
         # Final predicted price
-        predicted_price = round(
+        heuristic_price = round(
             base_price * seasonal_factor * mandi_factor * trend_factor * (1 + noise), 2
         )
+
+        predicted_price = heuristic_price
+        
+        # Pull from our trained XGBoost models if available
+        if getattr(self, "xgb_model", None) is not None:
+            try:
+                import numpy as np
+                # The pipeline requires 20 columns: day, month, seasonALS, MAs, lags
+                # Creating a dummy tensor mapping the feature dimensions (20 features)
+                # In full prod, we'd pull these lags from the Posgres timescale DB
+                dummy_features = np.zeros((1, 20)) 
+                dummy_features[0, 6] = base_price * mandi_factor # price_ma_3
+                dummy_features[0, 12] = base_price * mandi_factor * 0.95 # price_lag_1
+                
+                xgb_pred = float(self.xgb_model.predict(dummy_features)[0])
+                # Blend MVP heuristic with the XGBoost regression tensor
+                predicted_price = round((heuristic_price + xgb_pred) / 2, 2)
+            except Exception as e:
+                print(f"XGB inference error: {e}")
 
         # Confidence decreases with days ahead
         base_confidence = 0.92
         confidence = round(max(0.55, base_confidence - 0.015 * days_ahead + random.gauss(0, 0.03)), 2)
 
+        # Fetch real weather context if available
+        weather_impact = 0.0
+        # Hardcoding lat/lon for demo mandis
+        lat, lon = (28.6139, 77.2090) if "Delhi" in mandi_info["state"] else (19.7515, 75.7139)
+        weather_data = await self.fetch_weather_data(lat, lon)
+        
+        if weather_data and "weather" in weather_data:
+            # Simple heuristic: Rain/Thunderstorm might spike prices slightly due to transport disruption
+            condition = weather_data["weather"][0]["main"].lower()
+            if condition in ["rain", "thunderstorm", "drizzle"]:
+                weather_impact = 0.15
+            elif condition in ["clear"]:
+                weather_impact = -0.05
+        else:
+            weather_impact = round(random.gauss(0, 0.1), 2)
+
         # Generate feature explanations
         explanations = self._generate_explanations(
-            seasonal_factor, noise, trend_factor, mandi_factor
+            seasonal_factor, noise, trend_factor, mandi_factor, weather_impact
         )
 
         return SinglePrediction(
@@ -154,6 +222,7 @@ class PredictionEngine:
         noise: float,
         trend_factor: float,
         mandi_factor: float,
+        weather_impact: float = None,
     ) -> list[FeatureExplanation]:
         """Generate SHAP-like feature explanations for the prediction."""
         explanations = []
@@ -173,10 +242,10 @@ class PredictionEngine:
         ))
 
         # Weather rainfall
-        weather_impact = round(random.gauss(-0.1, 0.15), 2)
+        w_imp = weather_impact if weather_impact is not None else round(random.gauss(-0.1, 0.15), 2)
         explanations.append(FeatureExplanation(
             feature="weather_rainfall",
-            impact=max(-1.0, min(1.0, weather_impact))
+            impact=max(-1.0, min(1.0, w_imp))
         ))
 
         # Market arrivals

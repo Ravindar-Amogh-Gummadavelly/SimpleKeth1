@@ -15,7 +15,7 @@ from models.ensemble import EnsemblePredictor
 import numpy as np
 
 
-def train_pipeline(csv_path: str = "data/sample_agmarknet.csv"):
+def train_pipeline(csv_path: str = "ml/data/sample_agmarknet.csv"):
     """Full training pipeline for all models."""
     print("=" * 60)
     print("🌾 SimpleKeth — ML Training Pipeline")
@@ -50,7 +50,7 @@ def train_pipeline(csv_path: str = "data/sample_agmarknet.csv"):
     xgb_mae = np.mean(np.abs(xgb_preds - y_test))
     xgb_mape = np.mean(np.abs((y_test - xgb_preds) / y_test)) * 100
     print(f"   XGBoost MAE: {xgb_mae:.2f}, MAPE: {xgb_mape:.2f}%")
-    xgb_model.save("artifacts/xgboost_model.joblib")
+    xgb_model.save("ml/artifacts/xgboost_model.joblib")
 
     # 3. Train LSTM (per-mandi)
     print("\n🧠 Training LSTM...")
@@ -60,7 +60,7 @@ def train_pipeline(csv_path: str = "data/sample_agmarknet.csv"):
         lstm_model.train(all_prices)
         lstm_pred = lstm_model.predict(all_prices[-lstm_model.lookback:])
         print(f"   LSTM next prediction: {lstm_pred:.2f}")
-        lstm_model.save("artifacts/lstm_model.pth")
+        lstm_model.save("ml/artifacts/lstm_model.pth")
     else:
         print("   ⚠️ Not enough data for LSTM training, skipping")
         lstm_pred = None
@@ -75,7 +75,7 @@ def train_pipeline(csv_path: str = "data/sample_agmarknet.csv"):
         prophet_preds = prophet_model.predict(days_ahead=7)
         if prophet_preds:
             print(f"   Prophet 7-day forecast: {[p['predicted_price'] for p in prophet_preds]}")
-        prophet_model.save("artifacts/prophet_model.joblib")
+        prophet_model.save("ml/artifacts/prophet_model.joblib")
     else:
         print("   ⚠️ Not enough data for Prophet training")
 
